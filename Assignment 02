@@ -1,0 +1,151 @@
+import java.util.ArrayList;
+import java.util.List;
+
+
+class Customer {
+    private String name;
+    private String customerType;
+
+    public Customer(String name, String customerType) {
+        this.name = name;
+        this.customerType = customerType;
+    }
+
+    public void receivePromotion() {
+        if (customerType.equals("Gold")) {
+            System.out.println(name + " receives a promotion message.");
+        }
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+}
+
+
+class Order {
+    private String orderType;
+    private List<Item> items;
+
+    public Order(String orderType) {
+        this.orderType = orderType;
+        this.items = new ArrayList<>();
+    }
+
+    public void addItem(Item item) {
+        if (orderType.equals("delivery") && items.size() >= 5) {
+            System.out.println("Cannot add more than 5 items to a delivery order.");
+        } else {
+            items.add(item);
+        }
+    }
+    public double calculateBill() {
+        double total = 0;
+        for (Item item : items) {
+            total += item.getPrice();
+        }
+        if (total > 5000) {
+            total *= 0.9; 
+        }
+        return total;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+}
+
+
+class Item {
+    private double price;
+    private String type;
+    private List<String> ingredients;
+
+    public Item(String name, double price, String type) {
+        this.price = price;
+        this.type = type;
+        this.ingredients = new ArrayList<>();
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public List<String> getIngredients() {
+        return ingredients;
+    }
+
+    public void addIngredients(List<String> newIngredients) {
+        ingredients.addAll(newIngredients);
+    }
+}
+
+
+class PizzaShop {
+    private List<Order> orders;
+    private int totalPizzasMade;
+
+    public PizzaShop() {
+        this.orders = new ArrayList<>();
+        this.totalPizzasMade = 0;
+    }
+
+    public Order createOrder(String orderType) {
+        Order order = new Order(orderType);
+        orders.add(order);
+        return order;
+    }
+
+    public int getTotalPizzasMade() {
+        return totalPizzasMade;
+    }
+
+    public void addIngredientsToPizza(Item pizza, List<String> ingredients, boolean isVeg) {
+        pizza.addIngredients(ingredients);
+        totalPizzasMade++;
+    }
+}
+
+
+public class PizzaShopDemo {
+    public static void main(String[] args) {
+        
+        Customer customer1 = new Customer("Alice", "Gold");
+        Customer customer2 = new Customer("Bob", "Normal");
+  PizzaShop shop = new PizzaShop();
+
+
+  customer1.receivePromotion();
+  customer2.receivePromotion();
+
+  
+  Order order1 = shop.createOrder("delivery");
+  Item vegPizza = new Item("Veg Pizza", 1500, "Veg");
+  Item nonVegPizza = new Item("Non-Veg Pizza", 2000, "Non-Veg");
+  Item beverage = new Item("Beverage", 500, "Beverage");
+
+  order1.addItem(vegPizza);
+  order1.addItem(nonVegPizza);
+  order1.addItem(beverage);
+  order1.addItem(beverage);
+  order1.addItem(beverage);
+
+  
+  order1.addItem(beverage);
+
+  
+  System.out.println("Total bill: " + order1.calculateBill());
+
+ 
+  List<String> vegIngredients = List.of("Tomato", "Onion");
+  List<String> nonVegIngredients = List.of("Chicken", "Pepperoni");
+  shop.addIngredientsToPizza(vegPizza, vegIngredients, true);
+  shop.addIngredientsToPizza(nonVegPizza, nonVegIngredients, false);
+  
+  System.out.println("Total pizzas made: " + shop.getTotalPizzasMade());
+    }
+}
